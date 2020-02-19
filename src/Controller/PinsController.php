@@ -15,9 +15,15 @@ class PinsController extends AbstractController
     public function index(): Response
     {
         $pin = new Pin;
+        $pin->setTitle('Title 2');
+        $pin->setDescription('Description 2');
+
+        $em = $this->getDoctrine()->getManager(); // entity manager
+        $em->persist($pin);
+        $em->flush();
 
         // var_dump($pin);
-        dump($pin);
+        // dump($pin);
         // die;
         // dd($pin);
 
