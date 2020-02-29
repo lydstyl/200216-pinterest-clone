@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
-// use App\Entity\Pin;
-// use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Pin;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PinRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -44,5 +45,24 @@ class PinsController extends AbstractController
 
         // return $this->render('pins/index.html.twig', compact('pins')); // compact('pins') is ['pins' => $pins]
         return $this->render('pins/index.html.twig', ['pins' => $repo->findAll()]);
+    }
+
+    /**
+     * @Route("/pins/create", methods={"GET", "POST"})
+     */
+    public function create(Request $request, EntityManagerInterface $em)
+    {
+        if($request->isMethod('POST')){
+            $data = $request->request->all(); // $request->query is $_GET and ->request is $_POST
+
+            $pin = new Pin;
+            $pin->setTitle($data['title']);
+            $pin->setDescription($data['description']);
+            $em->persist($pin);
+            $em->flush();
+
+        }
+
+        return $this->render('pins/create.html.twig');
     }
 }
